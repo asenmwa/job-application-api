@@ -31,14 +31,15 @@ This is a RESTful API built with Flask to handle job application submissions for
 
 This endpoint accepts POST requests with the following:
 
--   **Form data:**
-    -   `full_name` (required): Full name of the applicant.
-    -   `email` (required): Email address of the applicant.
-    -   `phone_number` (required): Phone number of the applicant.
-    -   Any additional fields as needed (e.g., `linkedin`, `portfolio`).
--   **File attachments:**
-    -   Any number of PDF files with any name.
-
+-   **Form data (any number of form fields with any name, for example):**
+    -   `full_name`: Full name of the applicant.
+    -   `email`: Email address of the applicant.
+    -   `phone_number`: Mobile phone number of the applicant.
+    -   Any additional fields as needed (e.g., `linkedin`, `website`,'github').
+-   **File attachments (any number of PDF files with any name, for example):**
+    -   `cv`: PDF of CV of the applicant.
+    -   `cover_letter`: PDF cover letter from the applicant.
+    -   
 **Example using curl:**
 
 ```bash
