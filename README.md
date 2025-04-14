@@ -1,77 +1,68 @@
-# Job Application Submission API  
+# Job Application Submission API
 
-## Objective  
-Build a RESTful API endpoint to handle job applications for software developer candidates.  
+## Description
 
-## Requirements  
+This is a RESTful API built with Flask to handle job application submissions for software developer candidates. It allows candidates to submit their applications with personal information, additional fields, and file attachments.
 
-### 1. API Endpoint Functionality  
-- Create a **POST endpoint** to accept job application submissions with the following fields:  
-  - Full Name (required)  
-  - Email Address (required)  
-  - Phone Number (required)  
-  - Additional fields dynamically specified in the request payload (e.g., LinkedIn profile, portfolio links).  
-- Accept file attachments (e.g., CV and cover letter in PDF format).  
-- Validate input for:  
-  - Required fields.  
-  - Proper email and phone number formats.  
-  - File type and size limits (only PDFs, max 5 MB per file).  
+## Setup
 
-### 2. Database Storage  
-- Save all received data and attachments in a relational database or suitable storage system.  
-- Generate a **unique job application token** for each submission.  
-- Store the generated token alongside the application data.  
+1.  **Install dependencies:**
+    ```bash
+    pip install Flask Flask-MySQLdb python-dotenv
+    ```
+2.  **Set up MySQL database:**
+    -   Create a MySQL database named `job_applications`.
+    -   Create the `applications` and `attachments` tables using the provided `database.sql` file.
+    -   Update the `.env` file with your MySQL credentials:
+        ```
+        MYSQL_HOST=localhost
+        MYSQL_USER=your_mysql_user
+        MYSQL_PASSWORD=your_mysql_password
+        MYSQL_DB=job_applications
+        ```
+3.  **Run the application:**
+    ```bash
+    python app.py
+    ```
 
-### 3. Email Notifications  
-- Send an email to a specified address with:  
-  - Application details.  
-  - Attached files.  
-  - The **job application token** for tracking purposes.  
+## API Endpoint
 
-### 4. Response Handling  
-- Return a confirmation message to the applicant upon successful submission, including the **job application token**.  
-- Provide meaningful error messages for invalid inputs or missing data.  
+### POST /apply
 
-### 5. Job Application Confirmation  
-- Create a **GET endpoint** that accepts the **job application token** as a parameter.  
-- Respond with the details of the submitted application (fields only, no attachments).  
+This endpoint accepts POST requests with the following:
 
-### 6. Security  
-- Encrypt sensitive data in the database.  
-- Validate all inputs to prevent security vulnerabilities (e.g., SQL injection, XSS).  
-- Ensure file uploads are securely handled and scanned for potential threats.  
+-   **Form data (any number of form fields with any name, for example):**
+    -   `full_name`: Full name of the applicant.
+    -   `email`: Email address of the applicant.
+    -   `phone_number`: Mobile phone number of the applicant.
+    -   Any additional fields as needed (e.g., `linkedin`, `website`,'github').
+-   **File attachments (any number of PDF files with any name, for example):**
+    -   `cv`: PDF of CV of the applicant.
+    -   `cover_letter`: PDF cover letter from the applicant.
+    -   
+**Example using curl:**
 
----
+```bash
+curl -X POST -F "full_name=John Doe" -F "email=john.doe@example.com" -F "phone_number=1234567890" -F "linkedin=linkedin.com/in/johndoe" -F "cv=@cv.pdf" -F "cover_letter=@cover_letter.pdf" http://127.0.0.1:5000/apply
+```
 
-## Deliverables  
+**Response:**
 
-1. A functional API with:  
-   - **POST endpoint** for job application submissions.  
-   - **GET endpoint** for confirming submitted applications via token.  
-2. Database schema for storing application details and tokens.  
-3. Email integration for sending application details and tokens.  
-4. Unit and integration tests for all endpoints.  
-5. Documentation, including API specs and setup instructions.  
-
----
-
-## Technical Guidelines  
-
-- Use a modern web framework (e.g., Node.js with Express, Python with Flask/Django, etc.).  
-- Database options: PostgreSQL, MySQL, or MongoDB.  
-- Email services: SendGrid, Mailgun, or SMTP.  
-- Support JSON input and multi-part form data for file uploads.  
-- Use HTTPS for API communication and follow secure coding practices.  
-
----
-
-## Evaluation Criteria  
-
-- Adherence to requirements.  
-- Code quality, readability, and modularity.  
-- Documentation and test coverage.  
-
----
-
-## Submission Deadline  
-December 20, 2024
+-   **Success (201 Created):**
+    ```json
+    {
+        "message": "Application submitted successfully",
+        "application_token": "unique_application_token"
+    }
+    ```
+-   **Error (400 Bad Request):**
+    ```json
+    {
+        "error": "Error message"
+    }
+    ```
+-   **Error (500 Internal Server Error):**
+    ```json
+    {
+        "error": "Database error: error_message"
+    }
